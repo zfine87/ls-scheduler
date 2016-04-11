@@ -47,6 +47,8 @@ def createSchedule(scheduleList):
   dayList = sorted(list(set([each.day for each in scheduleList])))
 
   for day in dayList:
+    print(str(day))
+    oldWorkStrList = []
     workList = []
     change = False
 
@@ -56,6 +58,7 @@ def createSchedule(scheduleList):
     time = day
     while(time < day + datetime.timedelta(days=1)):
       #Check for and remove ending shifts
+      leavingList = [shift.name for shift in workList if shift.end == time]
       newWorkList = [shift for shift in workList if shift.end != time]
       if(len(newWorkList) != len(workList)):
         change = True
@@ -69,12 +72,12 @@ def createSchedule(scheduleList):
           change = True
           
       if(change):
-        printWorkList(workList, time)
+        oldWorkStrList = printWorkList(workList, time, oldWorkStrList, leavingList)
+
 
       change = 0
       time += datetime.timedelta(minutes=15)
 
-    print(str(day))
     input()
 
 #Add new shift into list, then reorder based on ranking
@@ -83,16 +86,30 @@ def addShift(workList, shift):
   workList.sort(key=lambda x: x.rank, reverse=False)  
   
 
-def printWorkList(workList, time):
+def printWorkList(workList, time, oldWorkStrList, leavingList):
+  workStrList = []
   print()
   print(time.strftime("At %I:%M %p"))
   size = len(workList)
   for i in range(0, int(size/3)):
-    print(workList[i].name + " in Group 3")
+    if(workList[i].name + " in Group 3" not in oldWorkStrList):
+      workStrList.append(workList[i].name + " in Group 3")
+  
   for i in range(int(size/3), int((size/3) * 2)):
-    print(workList[i].name + " in Group 2")
+    if(workList[i].name + " in Group 2" not in oldWorkStrList):
+      workStrList.append(workList[i].name + " in Group 2")
+  
   for i in range(int((size/3)*2), int((size/3) * 3)):
-    print(workList[i].name + " in Group 1")
+    if(workList[i].name + " in Group 1" not in oldWorkStrList):
+      workStrList.append(workList[i].name + " in Group 1")
+
+  for each in leavingList:
+    print(each + " shift ends")
+
+  for each in workStrList:
+    print(each)
+
+  return list(set(workStrList + oldWorkStrList))
 
 
 # getSchedule()
