@@ -96,12 +96,12 @@ def printWorkList(workList, time, oldWorkStrList, leavingList):
       workStrList.append(workList[i].name + " in Group 2")
   
   for i in range(int(size/3), int((size/3) * 2)):
-    if(workList[i].name + " in Group 1" not in oldWorkStrList):
-      workStrList.append(workList[i].name + " in Group 1")
-  
-  for i in range(int((size/3)*2), int((size/3) * 3)):
     if(workList[i].name + " in Group 3" not in oldWorkStrList):
       workStrList.append(workList[i].name + " in Group 3")
+  
+  for i in range(int((size/3)*2), int((size/3) * 3)):
+    if(workList[i].name + " in Group 1" not in oldWorkStrList):
+      workStrList.append(workList[i].name + " in Group 1")
 
   for each in leavingList:
     print(each + " shift ends")
